@@ -1,0 +1,8 @@
+{
+  "name": "brenda-blanche-scorecard",
+  "version": "1.0.0",
+  "description": "Market Translation Scorecard — Brenda Blanche",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

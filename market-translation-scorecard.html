@@ -1,0 +1,1194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Translation Scorecard™ — Brenda Blanche</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,700;0,900;1,400;1,700;1,900&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --crimson: #ff0013; --navy: #010313; --charcoal: #0d1020;
+  --bone: #f5f0eb; --muted: #6b6b7a; --gold: #c9a84c;
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+  --spine: 4px;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--navy); color: var(--bone);
+  font-family: var(--sans); font-weight: 300;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden; min-height: 100vh;
+}
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: .35;
+}
+.spine {
+  position: fixed; top: 0; left: 0; width: var(--spine); height: 100%;
+  background: linear-gradient(180deg, var(--crimson) 0%, var(--gold) 100%); z-index: 200;
+}
+.screen { display: none; flex-direction: column; min-height: 100vh; padding-left: var(--spine); }
+.screen.active { display: flex; }
+.brand-mark { font-family: var(--mono); font-size: .52rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); }
+
+/* BUTTONS */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 14px;
+  background: var(--crimson); color: var(--bone);
+  font-family: var(--mono); font-size: .62rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: 18px 40px; border: none; cursor: pointer;
+  transition: all .2s ease; position: relative; overflow: hidden;
+}
+.btn-primary::after {
+  content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+  transform: scaleX(0); transform-origin: left; transition: transform .3s ease;
+}
+.btn-primary:hover { opacity: .88; transform: translateY(-2px); }
+.btn-primary:hover::after { transform: scaleX(1); }
+.btn-primary .arrow { transition: transform .2s; }
+.btn-primary:hover:not(:disabled) .arrow { transform: translateX(5px); }
+.btn-ghost {
+  background: transparent; border: 1px solid rgba(245,240,235,.15);
+  color: rgba(245,240,235,.35); font-family: var(--mono);
+  font-size: .58rem; letter-spacing: .15em; text-transform: uppercase;
+  padding: 12px 24px; cursor: pointer; transition: all .18s;
+}
+.btn-ghost:hover { border-color: rgba(245,240,235,.3); color: var(--bone); }
+.btn-ghost:disabled { opacity: .18; cursor: default; }
+.btn-next {
+  background: transparent; border: 1px solid var(--crimson); color: var(--crimson);
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .15em;
+  text-transform: uppercase; padding: 12px 28px; cursor: pointer; transition: all .18s;
+}
+.btn-next:hover:not(:disabled) { background: var(--crimson); color: var(--bone); }
+.btn-next:disabled { opacity: .2; cursor: default; border-color: rgba(245,240,235,.15); color: rgba(245,240,235,.15); }
+
+/* COVER */
+.cover-header {
+  padding: 2.5rem 3.5rem 0 3.5rem;
+  display: flex; justify-content: space-between; align-items: flex-start;
+}
+.free-tag {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .16em;
+  text-transform: uppercase; border: 1px solid rgba(201,168,76,.3);
+  padding: 6px 14px; color: var(--gold);
+}
+.cover-body {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 3rem 3.5rem 2rem; max-width: 920px; position: relative;
+}
+.cover-body::before {
+  content: ''; position: absolute; top: -20%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(ellipse, rgba(255,0,19,.07) 0%, transparent 65%);
+  pointer-events: none;
+}
+.cover-overline {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: .8rem;
+  animation: fadeUp .5s ease both .1s;
+}
+.cover-headline {
+  font-family: var(--serif); font-weight: 900;
+  font-size: clamp(2.8rem, 6.5vw, 6rem);
+  line-height: .95; letter-spacing: -.03em; color: var(--bone);
+  margin-bottom: 1.4rem; animation: fadeUp .5s ease both .2s;
+}
+.cover-headline em { color: var(--crimson); font-style: italic; }
+.cover-subheadline {
+  font-family: var(--serif); font-size: clamp(1rem, 1.8vw, 1.25rem);
+  font-style: italic; font-weight: 300;
+  color: rgba(245,240,235,.6); max-width: 580px;
+  line-height: 1.65; margin-bottom: 2rem;
+  animation: fadeUp .5s ease both .28s;
+}
+.cover-rule {
+  width: 80px; height: 2px;
+  background: linear-gradient(90deg, var(--crimson), var(--gold), transparent);
+  margin-bottom: 2rem; animation: fadeUp .5s ease both .3s;
+}
+.cover-offer {
+  background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.07);
+  border-left: 3px solid var(--crimson);
+  padding: 28px 32px; max-width: 580px; margin-bottom: 2rem;
+  animation: fadeUp .5s ease both .35s;
+}
+.cover-offer-label {
+  font-family: var(--mono); font-size: .46rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--crimson); margin-bottom: 14px; display: block;
+}
+.cover-offer-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.cover-offer-list li {
+  font-size: .88rem; line-height: 1.55; color: rgba(245,240,235,.7);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+.cover-offer-list li::before {
+  content: '→'; color: var(--gold); flex-shrink: 0; font-size: .8rem; margin-top: 2px;
+}
+.cover-honest {
+  font-family: var(--mono); font-size: .52rem; letter-spacing: .14em;
+  color: rgba(245,240,235,.25); text-transform: uppercase;
+  margin-bottom: 2.5rem; animation: fadeUp .5s ease both .4s;
+  max-width: 480px; line-height: 1.8;
+}
+.cover-honest span { color: var(--gold); }
+.cover-cta { animation: fadeUp .5s ease both .45s; }
+.cover-footer {
+  padding: 1.5rem 3.5rem; display: flex; gap: 3rem;
+  border-top: 1px solid rgba(245,240,235,.06); flex-wrap: wrap;
+}
+.cover-meta {
+  font-family: var(--mono); font-size: .48rem; letter-spacing: .14em;
+  color: rgba(245,240,235,.2); text-transform: uppercase;
+}
+.cover-meta span { color: rgba(201,168,76,.5); }
+
+/* TRANSITION */
+.pillar-transition {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 3.5rem; animation: fadeIn .4s ease; position: relative; overflow: hidden;
+}
+.pillar-bg-num {
+  position: absolute; right: -.05em; bottom: -.15em;
+  font-family: var(--serif); font-weight: 900; font-size: 30vw;
+  color: rgba(245,240,235,.022); line-height: 1;
+  pointer-events: none; user-select: none; letter-spacing: -.05em;
+}
+.pt-eyebrow {
+  font-family: var(--mono); font-size: .52rem; letter-spacing: .22em;
+  text-transform: uppercase; color: rgba(245,240,235,.3); margin-bottom: 1.4rem;
+}
+.pt-bar { width: 48px; height: 2px; background: linear-gradient(90deg, var(--crimson), var(--gold)); margin-bottom: 2.2rem; }
+.pt-heading {
+  font-family: var(--serif); font-weight: 900;
+  font-size: clamp(2.5rem, 6vw, 5rem); color: var(--bone);
+  margin-bottom: 1rem; line-height: 1.0; letter-spacing: -.025em;
+}
+.pt-heading span { color: var(--crimson); font-style: italic; }
+.pt-body {
+  font-size: .9rem; line-height: 1.85;
+  color: rgba(245,240,235,.45); max-width: 520px; margin-bottom: 3rem;
+}
+
+/* QUIZ */
+.quiz-top {
+  padding: 2rem 3.5rem 0;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.pillar-label-wrap { font-family: var(--mono); font-size: .6rem; letter-spacing: .18em; text-transform: uppercase; }
+.pillar-name { color: var(--gold); }
+.pillar-sub { color: rgba(245,240,235,.25); margin-left: 6px; }
+.progress-wrap { display: flex; align-items: center; gap: 16px; }
+.progress-bar-track { width: 200px; height: 1px; background: rgba(245,240,235,.08); overflow: hidden; }
+.progress-bar-fill {
+  height: 100%; background: linear-gradient(90deg, var(--crimson), var(--gold));
+  transition: width .5s ease; width: 0%;
+}
+.q-counter { font-family: var(--mono); font-size: .52rem; letter-spacing: .15em; color: rgba(245,240,235,.25); text-transform: uppercase; white-space: nowrap; }
+.quiz-body {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 3rem 3.5rem 2rem; max-width: 740px;
+}
+.q-number { font-family: var(--mono); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,235,.2); margin-bottom: 1.8rem; }
+.q-statement {
+  font-family: var(--serif); font-weight: 700;
+  font-size: clamp(1.4rem, 2.6vw, 1.95rem); line-height: 1.3;
+  color: var(--bone); margin-bottom: 3rem; letter-spacing: -.01em;
+}
+.answer-grid { display: flex; flex-direction: column; }
+.answer-btn {
+  display: flex; align-items: flex-start; gap: 18px;
+  background: transparent; border: none;
+  border-top: 1px solid rgba(245,240,235,.06);
+  padding: 18px 0; cursor: pointer; text-align: left;
+  color: var(--bone); font-family: var(--sans);
+  transition: all .18s ease; position: relative;
+}
+.answer-btn:last-child { border-bottom: 1px solid rgba(245,240,235,.06); }
+.answer-btn::before {
+  content: ''; position: absolute; left: -3.5rem; top: 0; bottom: 0;
+  width: 0; background: rgba(255,0,19,.04); transition: width .25s ease;
+}
+.answer-btn:hover::before { width: calc(100% + 7rem); }
+.answer-btn:hover { padding-left: 8px; }
+.answer-btn:hover .answer-dot { border-color: var(--crimson); }
+.answer-btn.selected { padding-left: 8px; }
+.answer-btn.selected .answer-dot { background: var(--crimson); border-color: var(--crimson); box-shadow: 0 0 12px rgba(255,0,19,.4); }
+.answer-btn.selected .answer-label { color: var(--bone); }
+.answer-dot { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(245,240,235,.25); flex-shrink: 0; margin-top: 6px; transition: all .18s ease; position: relative; z-index: 1; }
+.answer-label { font-size: .9rem; font-weight: 300; color: rgba(245,240,235,.45); line-height: 1.55; transition: color .18s; position: relative; z-index: 1; }
+.quiz-nav {
+  padding: 1.5rem 3.5rem; display: flex; justify-content: space-between; align-items: center;
+  border-top: 1px solid rgba(245,240,235,.06);
+}
+
+/* EMAIL GATE */
+#screen-gate { flex-direction: row; min-height: 100vh; animation: fadeIn .6s ease; }
+.gate-left {
+  flex: 0 0 42%; display: flex; flex-direction: column;
+  justify-content: space-between; padding: 3rem 3rem 3rem 3.5rem;
+  background: var(--charcoal); position: relative; overflow: hidden;
+}
+.gate-left::before {
+  content: ''; position: absolute; bottom: -80px; right: -80px;
+  width: 380px; height: 380px;
+  background: radial-gradient(ellipse, rgba(255,0,19,.18) 0%, transparent 65%); pointer-events: none;
+}
+.gate-left::after {
+  content: ''; position: absolute; top: -60px; left: -60px;
+  width: 300px; height: 300px;
+  background: radial-gradient(ellipse, rgba(201,168,76,.09) 0%, transparent 60%); pointer-events: none;
+}
+.gate-left-stripe {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(201,168,76,.25) 40%, rgba(255,0,19,.4) 70%, transparent);
+}
+.gate-left-brand { font-family: var(--mono); font-size: .5rem; letter-spacing: .22em; text-transform: uppercase; color: var(--gold); margin-bottom: 3.5rem; }
+.gate-left-eyebrow {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .22em;
+  text-transform: uppercase; color: rgba(245,240,235,.3);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 1.4rem;
+}
+.gate-left-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--crimson); }
+.gate-left-heading {
+  font-family: var(--serif); font-weight: 900;
+  font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1.0;
+  letter-spacing: -.03em; color: var(--bone); margin-bottom: 1.8rem;
+}
+.gate-left-heading em { font-style: italic; color: var(--crimson); }
+.gate-left-rule { width: 48px; height: 2px; background: linear-gradient(90deg, var(--crimson), var(--gold)); margin-bottom: 1.8rem; }
+.gate-left-desc { font-size: .85rem; line-height: 1.9; color: rgba(245,240,235,.42); max-width: 320px; }
+.gate-what-you-get { display: flex; flex-direction: column; gap: 10px; position: relative; z-index: 1; }
+.gate-what-label { font-family: var(--mono); font-size: .46rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(245,240,235,.25); margin-bottom: 4px; }
+.gate-what-item { display: flex; align-items: flex-start; gap: 10px; }
+.gate-what-arrow { color: var(--gold); font-size: .7rem; flex-shrink: 0; margin-top: 3px; }
+.gate-what-text { font-size: .78rem; color: rgba(245,240,235,.4); line-height: 1.5; }
+.gate-right {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding: 4rem 4rem 3rem 4.5rem; position: relative; overflow: hidden;
+}
+.gate-right::before {
+  content: ''; position: absolute; top: 50%; right: -100px; transform: translateY(-50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(ellipse, rgba(201,168,76,.04) 0%, transparent 65%); pointer-events: none;
+}
+.gate-form-eyebrow {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .22em;
+  text-transform: uppercase; color: var(--gold);
+  display: flex; align-items: center; gap: 10px; margin-bottom: 2rem;
+  animation: fadeUp .5s ease both .15s;
+}
+.gate-form-eyebrow::before { content: ''; width: 20px; height: 1px; background: var(--gold); }
+.gate-form-title {
+  font-family: var(--serif); font-weight: 900;
+  font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.1;
+  letter-spacing: -.02em; color: var(--bone); margin-bottom: .6rem;
+  animation: fadeUp .5s ease both .2s;
+}
+.gate-form-title em { font-style: italic; color: var(--crimson); }
+.gate-form-sub {
+  font-size: .82rem; line-height: 1.85; color: rgba(245,240,235,.38);
+  margin-bottom: 2.8rem; max-width: 360px;
+  animation: fadeUp .5s ease both .25s;
+}
+.field-group { display: flex; flex-direction: column; gap: 0; margin-bottom: 2.2rem; animation: fadeUp .5s ease both .3s; }
+.field-wrap { position: relative; margin-bottom: 0; }
+.field-wrap + .field-wrap { margin-top: 1.8rem; }
+.field-wrap input {
+  width: 100%; background: rgba(245,240,235,.03);
+  border: 1px solid rgba(245,240,235,.1); border-radius: 0; outline: none;
+  color: var(--bone); font-family: var(--sans); font-size: 1rem; font-weight: 300;
+  padding: 20px 18px 10px;
+  transition: border-color .25s ease, background .25s ease, box-shadow .25s ease;
+  caret-color: var(--crimson); letter-spacing: .01em;
+}
+.field-wrap input::placeholder { color: transparent; }
+.field-wrap input:focus { border-color: rgba(201,168,76,.5); background: rgba(245,240,235,.05); box-shadow: 0 0 0 1px rgba(201,168,76,.15), inset 0 1px 0 rgba(201,168,76,.06); }
+.field-wrap input:not(:placeholder-shown), .field-wrap input:focus { padding: 24px 18px 8px; }
+.field-label {
+  position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+  font-family: var(--mono); font-size: .58rem; letter-spacing: .18em;
+  text-transform: uppercase; color: rgba(245,240,235,.3);
+  pointer-events: none; transition: all .22s ease; transform-origin: left center;
+}
+.field-wrap input:focus ~ .field-label, .field-wrap input:not(:placeholder-shown) ~ .field-label { top: 14px; transform: translateY(0) scale(.82); color: var(--gold); letter-spacing: .22em; }
+.field-accent { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--crimson), var(--gold)); transform: scaleX(0); transform-origin: left; transition: transform .3s ease; }
+.field-wrap:focus-within .field-accent { transform: scaleX(1); }
+.gate-cta-row { display: flex; flex-direction: column; gap: 16px; animation: fadeUp .5s ease both .35s; }
+.gate-submit-full {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: var(--crimson); color: var(--bone);
+  font-family: var(--mono); font-size: .62rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: 18px 28px; border: none; cursor: pointer;
+  transition: all .2s ease; position: relative; overflow: hidden; width: 100%;
+}
+.gate-submit-full::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.06) 0%, transparent 50%); pointer-events: none; }
+.gate-submit-full::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), rgba(201,168,76,.2)); }
+.gate-submit-full:hover:not(:disabled) { opacity: .9; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,0,19,.35); }
+.gate-submit-full:disabled { opacity: .3; cursor: not-allowed; transform: none; }
+.gate-submit-left { display: flex; align-items: center; gap: 12px; }
+.gate-submit-arrow { font-size: 1rem; transition: transform .2s; }
+.gate-submit-full:hover:not(:disabled) .gate-submit-arrow { transform: translateX(4px); }
+.gate-meta-row { display: flex; align-items: center; }
+.gate-privacy { font-family: var(--mono); font-size: .46rem; color: rgba(245,240,235,.18); letter-spacing: .12em; text-transform: uppercase; display: flex; align-items: center; gap: 7px; }
+.gate-privacy::before { content: '⊛'; font-size: .6rem; opacity: .4; }
+.gate-error { font-family: var(--mono); font-size: .56rem; color: var(--crimson); margin-bottom: 1rem; display: none; letter-spacing: .1em; text-transform: uppercase; padding: 10px 14px; border-left: 2px solid var(--crimson); background: rgba(255,0,19,.06); animation: fadeUp .2s ease; }
+.gate-spinner { display: none; width: 12px; height: 12px; border: 2px solid rgba(245,240,235,.25); border-top-color: var(--bone); border-radius: 50%; animation: spin .7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media(max-width:780px) {
+  #screen-gate { flex-direction: column; }
+  .gate-left { flex: 0 0 auto; padding: 2rem 1.5rem; }
+  .gate-what-you-get { display: none; }
+  .gate-right { padding: 2.5rem 1.5rem; }
+}
+
+/* RESULTS */
+#screen-results { animation: fadeIn .5s ease; }
+.results-header {
+  padding: 2.5rem 3.5rem 2rem;
+  border-bottom: 1px solid rgba(245,240,235,.06);
+  display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1.5rem;
+}
+.diagnosis-label { font-family: var(--mono); font-size: .5rem; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: .7rem; }
+.archetype-badge {
+  display: inline-block; background: var(--crimson); color: var(--bone);
+  font-family: var(--mono); font-size: .6rem; letter-spacing: .2em;
+  text-transform: uppercase; font-weight: 700; padding: 8px 20px; position: relative;
+}
+.archetype-badge::after { content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.mts-wrap { text-align: right; }
+.mts-num { font-family: var(--serif); font-weight: 900; font-size: 3.5rem; line-height: 1; color: var(--bone); letter-spacing: -.03em; }
+.mts-label { font-family: var(--mono); font-size: .7rem; color: var(--muted); letter-spacing: .1em; margin-top: .3rem; }
+.mts-zone-display { font-family: var(--mono); font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); margin-top: .4rem; }
+.results-grid { padding: 3rem 3.5rem 4rem; display: grid; grid-template-columns: 1.2fr 1fr; gap: 3.5rem; align-items: start; }
+.scores-block { margin-bottom: 2.5rem; }
+.score-row { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.score-label { font-family: var(--mono); font-size: .56rem; letter-spacing: .14em; text-transform: uppercase; min-width: 80px; color: rgba(245,240,235,.3); }
+.score-row.is-gap .score-label { color: var(--bone); }
+.score-track { flex: 1; height: 1px; background: rgba(245,240,235,.06); }
+.score-fill { height: 100%; background: rgba(245,240,235,.15); transition: width 1s ease; width: 0%; }
+.score-row.is-gap .score-fill { background: linear-gradient(90deg, var(--crimson), var(--gold)); }
+.score-num { font-family: var(--mono); font-size: .6rem; color: rgba(245,240,235,.2); min-width: 30px; text-align: right; }
+.score-row.is-gap .score-num { color: var(--crimson); }
+.weak-tag { font-family: var(--mono); font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: var(--crimson); white-space: nowrap; opacity: 0; transition: opacity .5s .9s; }
+.weak-tag.visible { opacity: 1; }
+.r-headline { font-family: var(--serif); font-weight: 900; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.1; letter-spacing: -.02em; color: var(--bone); margin-bottom: 1.2rem; }
+.r-headline em { font-style: italic; color: var(--crimson); }
+.r-verdict { font-size: .9rem; line-height: 1.9; color: rgba(245,240,235,.55); margin-bottom: 2rem; }
+.cost-block { border-top: 1px solid rgba(245,240,235,.07); padding-top: 1.8rem; margin-bottom: 2rem; }
+.cost-label { font-family: var(--mono); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,0,19,.7); margin-bottom: 1rem; }
+.cost-body { font-size: .88rem; line-height: 1.85; color: rgba(245,240,235,.45); margin-bottom: 1.5rem; }
+.signs-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.signs-list li { font-size: .85rem; line-height: 1.65; color: rgba(245,240,235,.4); padding-left: 20px; position: relative; }
+.signs-list li::before { content: '→'; position: absolute; left: 0; color: var(--crimson); font-size: .72rem; top: 2px; }
+.next-phase-block { border-top: 1px solid rgba(245,240,235,.07); padding-top: 1.8rem; margin-bottom: 2rem; }
+.next-phase-label { font-family: var(--mono); font-size: .52rem; letter-spacing: .2em; text-transform: uppercase; color: var(--gold); margin-bottom: .8rem; }
+.next-phase-name { font-family: var(--serif); font-size: 1.3rem; font-weight: 700; color: var(--bone); margin-bottom: .5rem; letter-spacing: -.01em; }
+.next-phase-body { font-size: .85rem; line-height: 1.75; color: rgba(245,240,235,.45); }
+
+/* FIX BLOCK — immediate move */
+.fix-block {
+  border-left: 3px solid var(--crimson);
+  padding: 2rem 2rem 2rem 2.2rem;
+  background: rgba(255,0,19,.04);
+  position: relative;
+  margin-top: 2rem;
+}
+.fix-block::before {
+  content: ''; position: absolute; top: 0; left: -3px;
+  width: 3px; height: 40%; background: var(--gold);
+}
+.fix-eyebrow {
+  font-family: var(--mono); font-size: .5rem; letter-spacing: .2em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: .8rem;
+}
+.fix-title {
+  font-family: var(--serif); font-weight: 700; font-size: 1.15rem;
+  color: var(--bone); margin-bottom: 1.5rem; letter-spacing: -.01em;
+}
+.fix-steps { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+.fix-steps li {
+  font-size: .85rem; line-height: 1.75;
+  color: rgba(245,240,235,.5); display: flex; gap: 14px;
+}
+.fix-step-num {
+  font-family: var(--mono); font-size: .55rem; color: var(--gold);
+  font-weight: 700; margin-top: 4px; flex-shrink: 0; letter-spacing: .05em;
+}
+
+/* RESULTS CTAs */
+.results-ctas {
+  display: flex; flex-direction: column; gap: 12px;
+  margin-top: 2rem; padding-top: 2rem;
+  border-top: 1px solid rgba(245,240,235,.07);
+}
+.results-cta-label { font-family: var(--mono); font-size: .5rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
+.btn-cta-primary {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--crimson); color: var(--bone);
+  font-family: var(--mono); font-size: .6rem; font-weight: 700;
+  letter-spacing: .18em; text-transform: uppercase;
+  padding: 18px 24px; border: none; cursor: pointer;
+  transition: all .2s ease; text-decoration: none; position: relative; overflow: hidden;
+}
+.btn-cta-primary::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.btn-cta-primary:hover { opacity: .9; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,0,19,.35); }
+.btn-cta-primary-sub { font-size: .75rem; color: rgba(245,240,235,.5); margin-top: 6px; line-height: 1.5; }
+.btn-cta-secondary {
+  display: flex; align-items: center; justify-content: space-between;
+  background: transparent; border: 1px solid rgba(245,240,235,.2); color: var(--bone);
+  font-family: var(--mono); font-size: .6rem; font-weight: 500;
+  letter-spacing: .18em; text-transform: uppercase;
+  padding: 18px 24px; cursor: pointer;
+  transition: all .2s ease; text-decoration: none;
+}
+.btn-cta-secondary:hover { border-color: var(--gold); color: var(--gold); }
+.btn-cta-secondary-sub { font-size: .75rem; color: rgba(245,240,235,.35); margin-top: 6px; line-height: 1.5; }
+
+/* ARCHETYPE CARD */
+.archetype-card { border: 1px solid rgba(245,240,235,.07); padding: 2rem; margin-bottom: 2rem; position: relative; overflow: hidden; }
+.archetype-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--crimson), var(--gold), transparent); }
+.ac-label { font-family: var(--mono); font-size: .48rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: .8rem; }
+.ac-name { font-family: var(--serif); font-weight: 900; font-size: 1.8rem; color: var(--bone); line-height: 1.1; margin-bottom: .5rem; letter-spacing: -.02em; }
+.ac-combo { font-family: var(--mono); font-size: .5rem; letter-spacing: .14em; text-transform: uppercase; color: var(--crimson); margin-bottom: 1.2rem; display: block; }
+.ac-desc { font-size: .82rem; line-height: 1.8; color: rgba(245,240,235,.42); }
+.ac-quote { font-family: var(--serif); font-size: .95rem; font-style: italic; color: rgba(245,240,235,.55); border-left: 2px solid rgba(255,0,19,.3); padding-left: 14px; line-height: 1.55; margin-top: 1.2rem; }
+.mts-ladder { border: 1px solid rgba(245,240,235,.07); padding: 1.5rem 1.8rem; margin-bottom: 2rem; }
+.mts-ladder-label { font-family: var(--mono); font-size: .48rem; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
+.mts-ladder-track { display: flex; height: 6px; background: rgba(245,240,235,.05); margin-bottom: .7rem; overflow: hidden; }
+.mts-segment { flex: 1; border-right: 1px solid rgba(1,3,19,.6); }
+.mts-segment:last-child { border-right: none; }
+.mts-segment.active { background: var(--crimson); }
+.mts-segment.passed { background: rgba(255,0,19,.25); }
+.mts-ladder-labels { display: flex; justify-content: space-between; }
+.mts-zone-lbl { font-family: var(--mono); font-size: .4rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(245,240,235,.2); }
+.mts-zone-lbl.active { color: var(--gold); }
+
+.results-footer { padding: 1.5rem 3.5rem; border-top: 1px solid rgba(245,240,235,.06); display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+.restart-btn { background: transparent; border: none; color: rgba(245,240,235,.2); font-family: var(--mono); font-size: .52rem; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; transition: color .15s; }
+.restart-btn:hover { color: var(--bone); }
+.results-note { font-family: var(--mono); font-size: .48rem; color: rgba(245,240,235,.12); letter-spacing: .1em; text-transform: uppercase; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:none} }
+
+@media(max-width:780px) {
+  .results-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .cover-body, .quiz-body, .quiz-top, .quiz-nav, .cover-header, .cover-footer,
+  .results-header, .results-grid, .results-footer, .pillar-transition { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .progress-bar-track { width: 100px; }
+  .cover-headline { font-size: 2.8rem; }
+  .results-ctas { flex-direction: column; }
+}
+</style>
+</head>
+<body>
+<div class="spine"></div>
+
+<!-- ════════ COVER ════════ -->
+<div id="screen-cover" class="screen active">
+  <div class="cover-header">
+    <div class="brand-mark">Brenda Blanche™ · The Unapologetics</div>
+    <div class="free-tag">Free · 3 Minutes</div>
+  </div>
+  <div class="cover-body">
+    <div class="cover-overline">The Market Translation Scorecard™</div>
+    <h1 class="cover-headline">
+      Find out exactly why<br>
+      the market isn’t<br>
+      <em>paying you yet.</em>
+    </h1>
+    <div class="cover-rule"></div>
+    <p class="cover-subheadline">You’re skilled. You deliver results. Your clients know your value. But something is getting lost between what you know you can do and what the market is actually willing to pay for. This scorecard tells you exactly what that something is.</p>
+    <div class="cover-offer">
+      <span class="cover-offer-label">In 3 minutes and 15 honest statements, you’ll walk away with</span>
+      <ul class="cover-offer-list">
+        <li>Your <strong>Market Translation Score™</strong> — a precise 0–100 measure of how clearly the market can read your value right now</li>
+        <li>Your <strong>Expert Archetype</strong> — one of 7 specific profiles that names exactly where you’re stuck and why</li>
+        <li>A <strong>personalised report</strong> sent to your inbox — your name, your scores, your diagnosis, and a step-by-step plan of action built around your specific gap</li>
+        <li>The option to <strong>book a free Clarity Call</strong> — for the people whose gap is painful enough that they don’t want to figure it out alone</li>
+      </ul>
+    </div>
+    <p class="cover-honest">
+      It’s free. <span>·</span> It costs you 3 minutes and the honesty to answer 15 statements
+      about where you actually are — not where you wish you were.
+    </p>
+    <div class="cover-cta">
+      <button class="btn-primary" onclick="startQuiz()">
+        Start the Scorecard <span class="arrow">→</span>
+      </button>
+    </div>
+  </div>
+  <div class="cover-footer">
+    <div class="cover-meta">15 statements <span>·</span> 3 minutes</div>
+    <div class="cover-meta">7 expert archetypes</div>
+    <div class="cover-meta">Personalised report <span>·</span> sent to your inbox</div>
+  </div>
+</div>
+
+<!-- ════════ TRANSITION ════════ -->
+<div id="screen-transition" class="screen">
+  <div class="pillar-transition">
+    <div class="pillar-bg-num" id="pt-bg-num">1</div>
+    <div class="pt-eyebrow" id="pt-eyebrow">Section 1 of 3</div>
+    <div class="pt-bar"></div>
+    <h2 class="pt-heading" id="pt-heading"><span>Identity</span></h2>
+    <p class="pt-body" id="pt-body"></p>
+    <button class="btn-primary" onclick="continueToQuestions()">
+      Continue <span class="arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ════════ QUIZ ════════ -->
+<div id="screen-quiz" class="screen">
+  <div class="quiz-top">
+    <div class="pillar-label-wrap">
+      <span class="pillar-name" id="pillar-display">Identity</span>
+      <span class="pillar-sub" id="pillar-sub">· Signal</span>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-bar-track"><div class="progress-bar-fill" id="progress-fill"></div></div>
+      <div class="q-counter" id="q-counter">1 of 15</div>
+    </div>
+  </div>
+  <div class="quiz-body">
+    <div class="q-number" id="q-number">Statement 01</div>
+    <p class="q-statement" id="q-statement"></p>
+    <div class="answer-grid">
+      <button class="answer-btn" onclick="selectAnswer(2)" data-val="2">
+        <div class="answer-dot"></div><span class="answer-label" id="label-yes"></span>
+      </button>
+      <button class="answer-btn" onclick="selectAnswer(1)" data-val="1">
+        <div class="answer-dot"></div><span class="answer-label" id="label-somewhat"></span>
+      </button>
+      <button class="answer-btn" onclick="selectAnswer(0)" data-val="0">
+        <div class="answer-dot"></div><span class="answer-label" id="label-no"></span>
+      </button>
+    </div>
+  </div>
+  <div class="quiz-nav">
+    <button class="btn-ghost" id="btn-back" onclick="goBack()">← Back</button>
+    <button class="btn-next" id="btn-next" onclick="goNext()" disabled>Next →</button>
+  </div>
+</div>
+
+<!-- ════════ EMAIL GATE ════════ -->
+<div id="screen-gate" class="screen">
+  <div class="gate-left">
+    <div class="gate-left-stripe"></div>
+    <div>
+      <div class="gate-left-brand">Brenda Blanche™ · The Unapologetics</div>
+      <div class="gate-left-eyebrow">Your diagnosis is ready</div>
+      <h2 class="gate-left-heading">
+        One step to<br>unlock your <em>full<br>report.</em>
+      </h2>
+      <div class="gate-left-rule"></div>
+      <p class="gate-left-desc">
+        Your Market Translation Score™, your Expert Archetype, and your
+        personalised plan of action are calculated and waiting.
+        Enter your details and your full report lands in your inbox.
+      </p>
+    </div>
+    <div class="gate-what-you-get">
+      <div class="gate-what-label">Your personalised report includes</div>
+      <div class="gate-what-item">
+        <span class="gate-what-arrow">→</span>
+        <span class="gate-what-text">Your exact scores across Identity, Expertise, and Structure</span>
+      </div>
+      <div class="gate-what-item">
+        <span class="gate-what-arrow">→</span>
+        <span class="gate-what-text">Your Expert Archetype — named and fully explained</span>
+      </div>
+      <div class="gate-what-item">
+        <span class="gate-what-arrow">→</span>
+        <span class="gate-what-text">What your gap is currently costing you</span>
+      </div>
+      <div class="gate-what-item">
+        <span class="gate-what-arrow">→</span>
+        <span class="gate-what-text">Your step-by-step plan of action</span>
+      </div>
+    </div>
+  </div>
+  <div class="gate-right">
+    <div class="gate-form-eyebrow">One step away</div>
+    <h3 class="gate-form-title">
+      Where should I send<br>your <em>personalised report?</em>
+    </h3>
+    <p class="gate-form-sub">
+      Enter your name and email. Your full report — with your name, your exact scores,
+      your archetype diagnosis, and your plan of action — lands in your inbox immediately.
+    </p>
+    <div class="gate-error" id="gate-error">Please fill in both fields correctly.</div>
+    <div class="field-group">
+      <div class="field-wrap">
+        <input type="text" id="gate-name" placeholder="name" autocomplete="given-name">
+        <label class="field-label" for="gate-name">First Name</label>
+        <div class="field-accent"></div>
+      </div>
+      <div class="field-wrap">
+        <input type="email" id="gate-email" placeholder="email" autocomplete="email">
+        <label class="field-label" for="gate-email">Email Address</label>
+        <div class="field-accent"></div>
+      </div>
+    </div>
+    <div class="gate-cta-row">
+      <button class="gate-submit-full" id="gate-submit-btn" onclick="submitGate()">
+        <span class="gate-submit-left">
+          Send Me My Report
+          <span class="gate-spinner" id="gate-spinner"></span>
+        </span>
+        <span class="gate-submit-arrow">→</span>
+      </button>
+      <div class="gate-meta-row">
+        <span class="gate-privacy">Your report is sent instantly. No spam, ever.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ RESULTS ════════ -->
+<div id="screen-results" class="screen">
+  <div class="results-header">
+    <div>
+      <div class="brand-mark" style="margin-bottom:1.2rem">Brenda Blanche™ · Market Translation Scorecard™</div>
+      <div class="diagnosis-label">Your Expert Archetype</div>
+      <div class="archetype-badge" id="archetype-badge">—</div>
+    </div>
+    <div class="mts-wrap">
+      <div class="diagnosis-label" style="text-align:right;margin-bottom:.5rem">Market Translation Score™</div>
+      <div class="mts-num" id="mts-num">—</div>
+      <div class="mts-label">out of 100</div>
+      <div class="mts-zone-display" id="mts-zone-display">—</div>
+    </div>
+  </div>
+  <div class="results-grid">
+    <div>
+      <div class="scores-block" id="scores-block"></div>
+      <div class="r-headline" id="r-headline"></div>
+      <p class="r-verdict" id="r-verdict"></p>
+      <div class="cost-block">
+        <div class="cost-label">What this gap is costing you right now</div>
+        <p class="cost-body" id="cost-body"></p>
+        <ul class="signs-list" id="signs-list"></ul>
+      </div>
+      <div class="next-phase-block">
+        <div class="next-phase-label">Your Next Phase</div>
+        <div class="next-phase-name" id="next-phase-name"></div>
+        <p class="next-phase-body" id="next-phase-body"></p>
+      </div>
+      <div class="fix-block">
+        <div class="fix-eyebrow">Your Immediate Move</div>
+        <div class="fix-title" id="fix-title"></div>
+        <ol class="fix-steps" id="fix-steps"></ol>
+      </div>
+      <div class="results-ctas">
+        <div>
+          <div class="results-cta-label">Your personalised report is in your inbox</div>
+          <div class="btn-cta-primary" style="cursor:default;">
+            <span>Your Report Is On Its Way to Your Inbox</span>
+            <span>✓</span>
+          </div>
+          <p class="btn-cta-primary-sub">Your full diagnosis, scores, archetype breakdown, and plan of action — sent to the email you just entered.</p>
+        </div>
+        <div style="margin-top:8px;">
+          <div class="results-cta-label">Want help closing this gap?</div>
+          <a class="btn-cta-secondary" href="https://calendly.com/unapologeticquenn/brand-clarity-call" target="_blank" id="clarity-call-link">
+            <span>Book a Free Clarity Call</span>
+            <span>→</span>
+          </a>
+          <p class="btn-cta-secondary-sub">For the people whose gap is painful enough that they don’t want to figure it out alone. 30 minutes. Free.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="archetype-card">
+        <div class="ac-label">Your Archetype</div>
+        <div class="ac-name" id="ac-name"></div>
+        <span class="ac-combo" id="ac-combo"></span>
+        <p class="ac-desc" id="ac-desc"></p>
+        <p class="ac-quote" id="ac-quote"></p>
+      </div>
+      <div class="mts-ladder">
+        <div class="mts-ladder-label">Where you are on the Translation Ladder</div>
+        <div class="mts-ladder-track">
+          <div class="mts-segment" data-zone="0"></div>
+          <div class="mts-segment" data-zone="1"></div>
+          <div class="mts-segment" data-zone="2"></div>
+          <div class="mts-segment" data-zone="3"></div>
+          <div class="mts-segment" data-zone="4"></div>
+        </div>
+        <div class="mts-ladder-labels">
+          <span class="mts-zone-lbl" data-zone="0">Invisible</span>
+          <span class="mts-zone-lbl" data-zone="1">Emerging</span>
+          <span class="mts-zone-lbl" data-zone="2">Recognized</span>
+          <span class="mts-zone-lbl" data-zone="3">Visible Auth.</span>
+          <span class="mts-zone-lbl" data-zone="4">Obvious Choice</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="results-footer">
+    <button class="restart-btn" onclick="restart()">← Retake Scorecard</button>
+    <div class="results-note">Market Translation Scorecard™ · Brenda Blanche™ · #UnapologeticallyYou</div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════
+// PLACEHOLDERS — replace when ready
+// ════════════════════════════════════════
+const CONFIG = {
+  NETLIFY_FUNCTION:    '/.netlify/functions/subscribe',
+  CLARITY_CALL_LINK:  'https://calendly.com/unapologeticquenn/brand-clarity-call',
+  SUBSTACK_URL:       'https://brendablanche.substack.com',
+  EMAIL_API_KEY:      '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',
+  EMAIL_FROM:         'hello@brendablanche.com'
+};
+
+// ════════════════════════════════════════
+// QUESTIONS — 15 behavioural evidence
+// ════════════════════════════════════════
+const questions = [
+  // IDENTITY 1–5
+  { pillar:'Identity', sub:'· Signal', section:'Section 1 of 3', bgNum:'1',
+    intro:'These five statements are about your signal — what the market actually receives when it encounters you, not what you intend to communicate. Answer based on what has already happened, not what you plan to do.',
+    text:'The last time someone asked what you do at a networking event or on a call, did they immediately follow up with a specific question about your work — or did the conversation move on to something else?',
+    yes:'They leaned in and asked something specific. My answer opened a real conversation.',
+    somewhat:'They nodded and said something polite, but nothing specific followed.',
+    no:'The conversation moved on. I could tell they didn’t fully get what I was describing.' },
+  { pillar:'Identity', sub:'· Signal', section:'Section 1 of 3', bgNum:'1', intro:'',
+    text:'Open your LinkedIn profile right now. Read your headline and about section as a stranger would. Does it tell a specific person with a specific problem exactly why you are the right choice — or does it describe what you do in language that could belong to dozens of others?',
+    yes:'It is specific, direct, and written for one person with one problem. It could not belong to anyone else.',
+    somewhat:'It describes what I do clearly, but it could probably fit a few other people in my space.',
+    no:'It is generic, credential-heavy, or written in language that sounds like everyone else in my field.' },
+  { pillar:'Identity', sub:'· Signal', section:'Section 1 of 3', bgNum:'1', intro:'',
+    text:'In the last 30 days, has anyone — a potential client, a peer, a follower — repeated one of your specific ideas, frameworks, or phrases back to you without being prompted?',
+    yes:'Yes. Someone used my specific language or idea in a conversation or comment.',
+    somewhat:'Someone referenced something I said, but in a vague way — not a specific idea I own.',
+    no:'No. Nothing I have said has been echoed back to me in a way that felt distinctly mine.' },
+  { pillar:'Identity', sub:'· Signal', section:'Section 1 of 3', bgNum:'1', intro:'',
+    text:'Write your brand positioning in one sentence right now — without looking at your profile, your bio, or any notes. Can you do it, and does it feel accurate when you read it back?',
+    yes:'I can write it immediately and it sounds right. It is consistent with what I say everywhere.',
+    somewhat:'I can write something, but it takes a moment and it doesn’t feel as sharp as it should.',
+    no:'I struggle to produce it on the spot, or what I write feels vague or like it keeps changing.' },
+  { pillar:'Identity', sub:'· Signal', section:'Section 1 of 3', bgNum:'1', intro:'',
+    text:'Think about the last three people who reached out to work with you or enquire about your services. Did they describe your work the same way you would describe it — using your language, your angle, your framing?',
+    yes:'Yes. They used my language and framing. They clearly understood what I do before we spoke.',
+    somewhat:'They had a rough idea but described it more broadly than I would have.',
+    no:'They described it differently each time, or came with assumptions that were off from what I actually do.' },
+  // EXPERTISE 6–10
+  { pillar:'Expertise', sub:'· Proof', section:'Section 2 of 3', bgNum:'2',
+    intro:'These five statements are about your proof — the visible, specific evidence that the market can point to as the reason to trust you. Answer based on what exists right now, not what you plan to create.',
+    text:'Is there a named methodology, framework, or process on your profile, website, or content that a stranger could describe back to you after encountering it — without you being in the room to explain it?',
+    yes:'Yes. I have a named, visible framework or process that stands on its own without my explanation.',
+    somewhat:'I have a process I follow, but it is not named, documented, or published anywhere a stranger would find it.',
+    no:'No. My process lives in my head and in how I work with clients. It is not visible externally.' },
+  { pillar:'Expertise', sub:'· Proof', section:'Section 2 of 3', bgNum:'2', intro:'',
+    text:'Open your phone or laptop and pull up one concrete client result — with a specific before, a specific after, and a specific transformation — in under two minutes. Can you do it?',
+    yes:'Yes. I have specific, documented results I can pull up immediately.',
+    somewhat:'I have results but they are described vaguely or scattered across emails and messages — not ready to share instantly.',
+    no:'No. My results exist but I have not turned them into any kind of shareable proof asset.' },
+  { pillar:'Expertise', sub:'· Proof', section:'Section 2 of 3', bgNum:'2', intro:'',
+    text:'Think about your last five pieces of content. Did any of them contain an insight, observation, or conclusion that a stranger could not have found by Googling the topic — something that only comes from your specific experience and thinking?',
+    yes:'Yes. At least one contained an original observation or named idea that is distinctly mine.',
+    somewhat:'One or two had a slightly different angle, but most of it was information others in my field also share.',
+    no:'Honestly, most of it was information that could have come from anyone knowledgeable in my space.' },
+  { pillar:'Expertise', sub:'· Proof', section:'Section 2 of 3', bgNum:'2', intro:'',
+    text:'The last time a potential client said “I need to think about it” after a discovery call — did you have a specific piece of proof, case study, or framework to send them that addressed their hesitation without you having to be on another call?',
+    yes:'Yes. I sent something specific that moved the conversation forward.',
+    somewhat:'I sent something but it was a general overview, not a precise response to their specific hesitation.',
+    no:'No. I followed up with words but had no proof asset that could do the work independently.' },
+  { pillar:'Expertise', sub:'· Proof', section:'Section 2 of 3', bgNum:'2', intro:'',
+    text:'If a journalist covering your industry asked you for a quote on the central problem you solve — would you have a precise, memorable, original point of view to give them, or would you produce something that sounds like every other expert in the space?',
+    yes:'I have a clear, specific, quotable point of view that is distinctly mine and immediately usable.',
+    somewhat:'I have an opinion but it would take me some time to articulate it in a way that feels sharp and original.',
+    no:'I would probably produce something competent but forgettable — similar to what others in my field would say.' },
+  // STRUCTURE 11–15
+  { pillar:'Structure', sub:'· Recognition', section:'Section 3 of 3', bgNum:'3',
+    intro:'These five statements are about your delivery system — the infrastructure that makes the market encounter you consistently and know exactly what to do when it does. Answer based on what is actually in place right now.',
+    text:'Count the number of consecutive weeks you published content in the last three months. Is that number 10 or more?',
+    yes:'Yes. I published consistently for 10 or more consecutive weeks in the last three months.',
+    somewhat:'I published for some weeks but missed several — it was driven by availability, not a system.',
+    no:'No. My publishing has been irregular — bursts of activity followed by gaps of silence.' },
+  { pillar:'Structure', sub:'· Recognition', section:'Section 3 of 3', bgNum:'3', intro:'',
+    text:'Go to your LinkedIn profile right now and look at the call to action. Is there one clear, specific, frictionless next step a stranger can take to move toward working with you — visible without scrolling or hunting?',
+    yes:'Yes. There is one clear, obvious next step visible immediately on my profile.',
+    somewhat:'There is something there, but it requires scrolling, hunting, or some interpretation to find.',
+    no:'No. There is no clear next step. Someone who wanted to hire me would need to figure out how on their own.' },
+  { pillar:'Structure', sub:'· Recognition', section:'Section 3 of 3', bgNum:'3', intro:'',
+    text:'Do you have a lead magnet, diagnostic tool, or free resource that is actively collecting contact details from your audience right now — not something you plan to build, but something live and working today?',
+    yes:'Yes. I have a live asset collecting leads independently of my active effort.',
+    somewhat:'I have something but it is not actively promoted or consistently bringing in contacts.',
+    no:'No. Every new lead comes from me actively reaching out or someone happening to find me.' },
+  { pillar:'Structure', sub:'· Recognition', section:'Section 3 of 3', bgNum:'3', intro:'',
+    text:'Think about the last person who decided not to work with you. Did you have a documented follow-up sequence — content, emails, or assets — that continued to build their trust after the conversation ended, without requiring your direct involvement?',
+    yes:'Yes. I have a sequence or set of assets that continues the relationship after a call ends.',
+    somewhat:'I followed up personally but had no systematic assets doing that work on my behalf.',
+    no:'No. When a conversation ends without a yes, it generally ends completely. Nothing continues the relationship.' },
+  { pillar:'Structure', sub:'· Recognition', section:'Section 3 of 3', bgNum:'3', intro:'',
+    text:'Pull up your last three months of inbound enquiries. Did any of them come from someone who had never spoken to you directly — who found you through your content, a referral, or an asset and reached out already convinced?',
+    yes:'Yes. At least one person reached out already sold — before we had ever spoken.',
+    somewhat:'I have had warm inbound, but they always needed significant convincing once we connected.',
+    no:'No. Every client I have came from an outbound effort, a direct referral, or a personal relationship. Nothing inbound from content.' }
+];
+
+// ════════════════════════════════════════
+// 7 ARCHETYPES
+// ════════════════════════════════════════
+const archetypes = {
+  PersonalBrandCelebrity: {
+    badge:'PERSONAL BRAND CELEBRITY',
+    acName:'Personal Brand Celebrity',
+    acCombo:'Identity Only · No Expertise · No Structure',
+    acDesc:'People know who you are. Your point of view is clear and your presence is felt. But the depth underneath is thin — and the system to convert that attention into consistent income is absent.',
+    acQuote:'“People like me, follow me, share my content. But they don’t buy — or when they do, it doesn’t stick.”',
+    headline:'You’re <em>recognisable.</em> You’re not yet trusted.',
+    verdict:'Your Identity is working — people know you exist and they feel your energy. The problem is that recognition without expertise and structure is celebrity, not authority. The market will follow you for free indefinitely. It needs a reason to pay.',
+    cost:'You get engagement without revenue. You feel busy without feeling paid. Your audience size doesn’t match your income.',
+    signs:['You get “This is so relatable” instead of “How do I hire you?”','Your audience grows but your client list doesn’t move at the same pace.','You’re afraid that if you go deeper, you’ll lose the following you’ve built.'],
+    nextPhase:'Phase 04 — Authority Conversion™',
+    nextPhaseBody:'Before more content, build the proof. Name your process. Create one proprietary framework that shows what your thinking produces — not just how your thinking feels.',
+    fixTitle:'Turn your point of view into a process',
+    fixSteps:['Pick one transformation you help people make — even informally.','Write out the 3–4 steps you take to get them there. Name each step something specific.','That is your methodology. Package it. Name the whole thing. Make it visible. Identity without expertise is a personality. Identity with expertise is an authority.']
+  },
+  HiddenExpert: {
+    badge:'HIDDEN EXPERT',
+    acName:'Hidden Expert',
+    acCombo:'Expertise Only · No Identity · No Structure',
+    acDesc:'Deep, genuine, often exceptional knowledge. Clients who find you never want to leave. But outside your immediate circle? Nobody knows you exist — and no system is in place to change that.',
+    acQuote:'“I know I’m good at this. I cannot explain why the market doesn’t reflect that.”',
+    headline:'You’re capable. You’re <em>completely invisible.</em>',
+    verdict:'Your expertise is real — possibly the strongest in the room. But expertise alone does not create market demand. The market cannot pay for what it cannot find, understand, or trust. You have everything you need to be the Obvious Choice™. The market simply cannot see it yet.',
+    cost:'You rely entirely on word of mouth. Growth is inconsistent, unpredictable, and exhausting. Less capable people with louder brands are winning clients you should have.',
+    signs:['Less experienced competitors are getting the opportunities you deserve.','You’ve been told you should charge more — but you can’t seem to make it stick.','You keep waiting for the right person to discover you instead of making yourself discoverable.'],
+    nextPhase:'Phase 01 — Identity Signal™',
+    nextPhaseBody:'Start with the lens. What do you see that others in your field miss? That singular perspective — made clear and repeatable — is the foundation of every other step.',
+    fixTitle:'Make one thing about you unmissable',
+    fixSteps:['Write one belief about your industry that most people won’t say out loud.','In one sentence: “Most people think [X]. I believe [Y]. That’s why I help [Z] do [A].”','Post that one sentence publicly today. Not a thread. Not an essay. One statement. See what moves.']
+  },
+  EfficientOperator: {
+    badge:'EFFICIENT OPERATOR',
+    acName:'Efficient Operator',
+    acCombo:'Structure Only · No Identity · No Expertise',
+    acDesc:'The machine is running. Content goes out. Systems are in place. Everything looks right from the outside. But without a distinctive Identity and deep Expertise, nothing compounds. Activity without differentiation.',
+    acQuote:'“I’m consistent. I’m organised. I’m doing everything right. So why is nothing building?”',
+    headline:'You’re <em>busy.</em> You’re not compounding.',
+    verdict:'Structure is your strength — and that is rare. But structure amplifies whatever is underneath it. Without a clear Identity and proven Expertise, your system is distributing noise consistently. The market can see you. It simply has no reason to choose you.',
+    cost:'You put in the work and get inconsistent returns. You’ve optimised the how without clarifying the why and the who.',
+    signs:['Your metrics are consistent but your revenue isn’t growing proportionally.','You can describe your process but not your point of view.','Your content gets seen but rarely converts to real conversations.'],
+    nextPhase:'Phase 01 — Identity Signal™',
+    nextPhaseBody:'Before your next post, answer this: what do you believe about your market that most people in your space refuse to say? That answer becomes your signal.',
+    fixTitle:'Add a point of view to the system you already have',
+    fixSteps:['Pull up your last 5 pieces of content. Ask: what position does each one take?','Find the one with the sharpest opinion. That’s your benchmark.','Rewrite every future piece to match that benchmark — not just information, but a position. Systems without signal are invisible. Yours doesn’t have to be.']
+  },
+  RecognizedExpert: {
+    badge:'RECOGNIZED EXPERT',
+    acName:'Recognized Expert',
+    acCombo:'Identity + Expertise · Missing Structure',
+    acDesc:'People understand who you are and trust your capability. Those who find you become loyal clients. But discovery is unpredictable — growth depends entirely on who happens to mention your name this month.',
+    acQuote:'“Everyone who works with me values me. The problem is not enough people work with me.”',
+    headline:'You’re valued. You’re not yet <em>scalable.</em>',
+    verdict:'Your Identity is clear and your Expertise is real. That combination earns deep trust from everyone who encounters you. The constraint is that the market can only encounter you by accident. Without Structure, demand depends on referrals, timing, and luck — none of which compound.',
+    cost:'Your growth has plateaued. You have case studies but no system to deploy them. You have a strong reputation in a small circle and no engine to expand it.',
+    signs:['You get great referrals but can’t predict when the next one arrives.','Your best clients found you through someone who happened to mention your name.','You know you should be doing more — you just don’t know what to systematise first.'],
+    nextPhase:'Phase 03 — Content Distribution™',
+    nextPhaseBody:'You have the Identity and the proof. Now build the engine that makes strangers encounter both — repeatedly, consistently, and without you having to be in the room every time.',
+    fixTitle:'Build one asset that works when you don’t',
+    fixSteps:['Take your strongest case study — the one clients mention most when they refer you.','Turn it into one piece of public content: a post, a breakdown, a specific before-and-after.','Add one clear, frictionless next step at the end. Not “DM me.” A specific action they can take right now. That’s your Structure starting.']
+  },
+  OperationalValueExpert: {
+    badge:'OPERATIONAL VALUE EXPERT',
+    acName:'Operational Value Expert',
+    acCombo:'Expertise + Structure · Missing Identity',
+    acDesc:'Real expertise. Real systems. You show up consistently and you deliver results. But no distinctive Identity separates you from the category. The market sees you and compares you — on price.',
+    acQuote:'“I’m good. I deliver. I’ve proven it. Why am I still competing on price?”',
+    headline:'You deliver. The market <em>commoditises you.</em>',
+    verdict:'This is the most frustrating archetype — because the work is real and the results are real. But without a distinctive Identity, the market has no anchor to choose you over alternatives. It defaults to price. You are not a commodity. You are an expert without a signal. Fix the signal.',
+    cost:'You price-match competitors who do less. You win clients who leave the moment someone cheaper appears. You work harder than you should for the revenue you’re generating.',
+    signs:['Price is always the first objection in your sales conversations.','Clients appreciate your work but couldn’t articulate what makes you uniquely irreplaceable.','You feel like you could charge more — and privately worry you’d lose clients if you did.'],
+    nextPhase:'Phase 01 — Identity Signal™',
+    nextPhaseBody:'Your expertise is not in question. Your signal is. One clear, repeatable point of view — communicated consistently — is the difference between a service provider and an authority.',
+    fixTitle:'Name the thing only you see',
+    fixSteps:['List three things you notice about client problems that others in your field consistently miss.','Pick the most uncomfortable one — the one you’re slightly nervous to say publicly.','Build your next three pieces of content around that observation. Differentiation is not about being different. It’s about being specifically right in a way others aren’t.']
+  },
+  VisiblePersonality: {
+    badge:'VISIBLE PERSONALITY',
+    acName:'Visible Personality',
+    acCombo:'Identity + Structure · Missing Expertise',
+    acDesc:'Strong signal. Working system. Audience growth. Engagement. But when people try to buy, they hesitate — because the depth of expertise underneath hasn’t yet matched the authority the visibility implies.',
+    acQuote:'“I have followers, engagement, and a clear voice. My conversions don’t match the attention I’m getting.”',
+    headline:'You’re visible. You’re not yet <em>proven.</em>',
+    verdict:'Your Identity is clear and your Structure is working — two of the three IES forces, which means you’re ahead of most. The conversion gap is a trust gap. The market is watching and enjoying you, but it hasn’t seen enough evidence that you can deliver on what you promise.',
+    cost:'Engagement is high. Revenue is inconsistent. Something is missing between “they love my content” and “they pay me.”',
+    signs:['You get more “love this!” than “how do I work with you?”','When people do buy, they sometimes feel surprised by the depth — like they expected less.','You haven’t made your proof as visible as your personality.'],
+    nextPhase:'Phase 04 — Authority Conversion™',
+    nextPhaseBody:'The audience is ready. Now give them the evidence. Case studies, frameworks, before-and-afters — proof assets that make paying you feel like the obvious next step, not a leap of faith.',
+    fixTitle:'Make your proof as visible as your personality',
+    fixSteps:['Identify one client transformation you’ve created. Write it as a before/after: where they started, what changed, where they are now.','Post it. Not as a brag. As evidence of what becomes possible when someone gets clear.','Do this once per week. Your personality got them curious. Your proof earns the sale.']
+  },
+  ObviousChoice: {
+    badge:'OBVIOUS CHOICE™',
+    acName:'Obvious Choice™',
+    acCombo:'Identity + Expertise + Structure · All Three Aligned',
+    acDesc:'All three IES forces present and compounding. The market understands who you are, trusts your capability, and can consistently encounter and choose you. Demand feels less manufactured and more inevitable.',
+    acQuote:'“Opportunities arrive before I go looking for them. The right clients find me before I find them.”',
+    headline:'You’re <em>the category.</em> Now scale it.',
+    verdict:'You have achieved what most experts never reach: full IES alignment. Your Identity signals clearly, your Expertise proves the promise, and your Structure delivers both consistently. The market does not have to be convinced to choose you. It simply has to encounter you — and the rest follows.',
+    cost:'There is no translation gap to close here. The work now is to protect the alignment you’ve built, deepen the authority, and expand without losing the clarity that got you here.',
+    signs:['Inbound enquiries are consistent and increasing without proportional effort.','Discovery calls close at a higher rate with significantly less selling.','You’ve been able to raise prices without losing the clients you actually want.'],
+    nextPhase:'Monetization™ — Optimise and Expand',
+    nextPhaseBody:'With all three IES forces aligned, your next move is to deepen the offer architecture and build the systems that scale your demand without scaling your hours.',
+    fixTitle:'Protect the alignment. Expand the reach.',
+    fixSteps:['Audit your last 10 client wins: what specifically brought each of them to you? Identify the mechanism and amplify it.','Identify the next adjacent audience that has the same problem — but doesn’t know you exist yet.','Build one new authority asset designed to reach them. Your system is proven. Now extend it.']
+  }
+};
+
+const zones = [
+  { min:0,  max:20,  name:'Invisible Expert™',  zone:0 },
+  { min:21, max:40,  name:'Emerging Expert™',   zone:1 },
+  { min:41, max:60,  name:'Recognized Expert™', zone:2 },
+  { min:61, max:80,  name:'Visible Authority™', zone:3 },
+  { min:81, max:100, name:'Obvious Choice™',    zone:4 }
+];
+
+let currentQ = 0;
+let answers  = new Array(15).fill(null);
+let selectedVal = null;
+let currentArchetype = '';
+let userName = '';
+let userEmail = '';
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function startQuiz() {
+  currentQ = 0; answers = new Array(15).fill(null);
+  selectedVal = null; currentArchetype = '';
+  showTransitionScreen(0);
+}
+
+function showTransitionScreen(idx) {
+  const q = questions[idx];
+  document.getElementById('pt-eyebrow').textContent = q.section;
+  document.getElementById('pt-heading').innerHTML   = '<span>' + q.pillar + '</span>';
+  document.getElementById('pt-body').textContent    = q.intro;
+  document.getElementById('pt-bg-num').textContent  = q.bgNum;
+  showScreen('screen-transition');
+}
+
+function continueToQuestions() { loadQuestion(currentQ); showScreen('screen-quiz'); }
+
+function loadQuestion(idx) {
+  const q = questions[idx];
+  document.getElementById('pillar-display').textContent = q.pillar;
+  document.getElementById('pillar-sub').textContent     = q.sub;
+  document.getElementById('q-number').textContent       = 'Statement ' + String(idx + 1).padStart(2, '0');
+  document.getElementById('q-statement').textContent    = q.text;
+  document.getElementById('q-counter').textContent      = (idx + 1) + ' of 15';
+  document.getElementById('progress-fill').style.width  = (idx / 15 * 100) + '%';
+  document.getElementById('label-yes').textContent      = q.yes;
+  document.getElementById('label-somewhat').textContent = q.somewhat;
+  document.getElementById('label-no').textContent       = q.no;
+  const saved = answers[idx];
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.classList.remove('selected');
+    if (saved !== null && parseInt(btn.dataset.val) === saved) btn.classList.add('selected');
+  });
+  selectedVal = saved;
+  document.getElementById('btn-next').disabled = (saved === null);
+  document.getElementById('btn-back').disabled = (idx === 0);
+}
+
+function selectAnswer(val) {
+  selectedVal = val; answers[currentQ] = val;
+  document.querySelectorAll('.answer-btn').forEach(btn => {
+    btn.classList.remove('selected');
+    if (parseInt(btn.dataset.val) === val) btn.classList.add('selected');
+  });
+  document.getElementById('btn-next').disabled = false;
+}
+
+function goBack() { if (currentQ === 0) return; currentQ--; loadQuestion(currentQ); }
+
+function goNext() {
+  if (selectedVal === null) return;
+  const prev = currentQ; currentQ++;
+  if (currentQ >= 15) {
+    document.getElementById('progress-fill').style.width = '100%';
+    currentArchetype = getArchetype(getScores());
+    showScreen('screen-gate');
+    return;
+  }
+  const pp = questions[prev].pillar, np = questions[currentQ].pillar;
+  if (np !== pp && questions[currentQ].intro) showTransitionScreen(currentQ);
+  else loadQuestion(currentQ);
+}
+
+function getScores() {
+  const iR = (answers[0]||0)+(answers[1]||0)+(answers[2]||0)+(answers[3]||0)+(answers[4]||0);
+  const eR = (answers[5]||0)+(answers[6]||0)+(answers[7]||0)+(answers[8]||0)+(answers[9]||0);
+  const sR = (answers[10]||0)+(answers[11]||0)+(answers[12]||0)+(answers[13]||0)+(answers[14]||0);
+  return {
+    Identity:  Math.round((iR / 10) * 100),
+    Expertise: Math.round((eR / 10) * 100),
+    Structure: Math.round((sR / 10) * 100)
+  };
+}
+
+function getMTS(s) { return Math.round((s.Identity + s.Expertise + s.Structure) / 3); }
+function getZone(m) { return zones.find(z => m >= z.min && m <= z.max) || zones[0]; }
+function getGapPillar(s) {
+  const mn = Math.min(s.Identity, s.Expertise, s.Structure);
+  if (s.Structure === mn) return 'Structure';
+  if (s.Identity  === mn) return 'Identity';
+  return 'Expertise';
+}
+function getArchetype(s) {
+  const iH = s.Identity >= 50, eH = s.Expertise >= 50, sH = s.Structure >= 50;
+  if (iH && eH && sH)  return 'ObviousChoice';
+  if (iH && eH && !sH) return 'RecognizedExpert';
+  if (eH && sH && !iH) return 'OperationalValueExpert';
+  if (iH && sH && !eH) return 'VisiblePersonality';
+  if (iH && !eH && !sH) return 'PersonalBrandCelebrity';
+  if (eH && !iH && !sH) return 'HiddenExpert';
+  if (sH && !iH && !eH) return 'EfficientOperator';
+  const mn = Math.min(s.Identity, s.Expertise, s.Structure);
+  if (s.Identity  === mn) return 'HiddenExpert';
+  if (s.Expertise === mn) return 'PersonalBrandCelebrity';
+  return 'EfficientOperator';
+}
+
+async function submitGate() {
+  const name  = document.getElementById('gate-name').value.trim();
+  const email = document.getElementById('gate-email').value.trim();
+  const errEl = document.getElementById('gate-error');
+  const btn   = document.getElementById('gate-submit-btn');
+  const spin  = document.getElementById('gate-spinner');
+  const ok    = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  if (!name || !ok) { errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  btn.disabled = true; spin.style.display = 'inline-block';
+  userName  = name;
+  userEmail = email;
+  const scores = getScores();
+  try {
+    await fetch(CONFIG.NETLIFY_FUNCTION, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name, email,
+        archetype:      currentArchetype,
+        mts:            getMTS(scores),
+        identityScore:  scores.Identity,
+        expertiseScore: scores.Expertise,
+        structureScore: scores.Structure,
+        zone:           getZone(getMTS(scores)).name
+      })
+    });
+  } catch(e) { console.warn('Function error (non-blocking):', e); }
+  btn.disabled = false; spin.style.display = 'none';
+  showResults();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('screen-gate').classList.contains('active')) submitGate();
+});
+
+function showResults() {
+  const scores = getScores();
+  const mts    = getMTS(scores);
+  const zone   = getZone(mts);
+  const r      = archetypes[currentArchetype];
+  const gap    = getGapPillar(scores);
+
+  document.getElementById('archetype-badge').textContent  = r.badge;
+  document.getElementById('mts-num').textContent          = mts;
+  document.getElementById('mts-zone-display').textContent = zone.name;
+
+  // Update clarity call link
+  document.getElementById('clarity-call-link').href = CONFIG.CLARITY_CALL_LINK;
+
+  // Score bars
+  const block = document.getElementById('scores-block');
+  block.innerHTML = '';
+  ['Identity','Expertise','Structure'].forEach(p => {
+    const sc   = scores[p];
+    const isG  = (p === gap) && (currentArchetype !== 'ObviousChoice');
+    const row  = document.createElement('div');
+    row.className = 'score-row' + (isG ? ' is-gap' : '');
+    row.innerHTML = `
+      <div class="score-label">${p}</div>
+      <div class="score-track"><div class="score-fill" style="width:0%" data-pct="${sc}"></div></div>
+      <div class="score-num">${sc}</div>
+      ${isG ? '<div class="weak-tag" id="weak-tag">← gap</div>' : ''}
+    `;
+    block.appendChild(row);
+  });
+
+  document.getElementById('r-headline').innerHTML        = r.headline;
+  document.getElementById('r-verdict').textContent       = r.verdict;
+  document.getElementById('cost-body').textContent       = r.cost;
+  document.getElementById('next-phase-name').textContent = r.nextPhase;
+  document.getElementById('next-phase-body').textContent = r.nextPhaseBody;
+  document.getElementById('fix-title').textContent       = r.fixTitle;
+
+  const sl = document.getElementById('signs-list');
+  sl.innerHTML = '';
+  r.signs.forEach(s => { const li = document.createElement('li'); li.textContent = s; sl.appendChild(li); });
+
+  const fl = document.getElementById('fix-steps');
+  fl.innerHTML = '';
+  r.fixSteps.forEach((step, i) => {
+    const li = document.createElement('li');
+    li.innerHTML = '<span class="fix-step-num">0' + (i + 1) + '</span><span>' + step + '</span>';
+    fl.appendChild(li);
+  });
+
+  document.getElementById('ac-name').textContent  = r.acName;
+  document.getElementById('ac-combo').textContent = r.acCombo;
+  document.getElementById('ac-desc').textContent  = r.acDesc;
+  document.getElementById('ac-quote').textContent = r.acQuote;
+
+  document.querySelectorAll('.mts-segment').forEach(seg => {
+    const z = parseInt(seg.dataset.zone);
+    seg.classList.remove('active','passed');
+    if (z === zone.zone)    seg.classList.add('active');
+    else if (z < zone.zone) seg.classList.add('passed');
+  });
+  document.querySelectorAll('.mts-zone-lbl').forEach(lbl => {
+    lbl.classList.toggle('active', parseInt(lbl.dataset.zone) === zone.zone);
+  });
+
+  showScreen('screen-results');
+
+  setTimeout(() => {
+    document.querySelectorAll('.score-fill').forEach(el => {
+      el.style.transition = 'width 1s ease';
+      el.style.width = el.dataset.pct + '%';
+    });
+    const wt = document.getElementById('weak-tag');
+    if (wt) setTimeout(() => wt.classList.add('visible'), 800);
+  }, 150);
+}
+
+function restart() {
+  currentQ = 0; answers = new Array(15).fill(null);
+  selectedVal = null; currentArchetype = '';
+  userName = ''; userEmail = '';
+  document.getElementById('gate-name').value  = '';
+  document.getElementById('gate-email').value = '';
+  document.getElementById('gate-error').style.display = 'none';
+  showScreen('screen-cover');
+}
+</script>
+</body>
+</html>
