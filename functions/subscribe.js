@@ -4,7 +4,7 @@ const https = require('https');
 // CONFIG
 // ══════════════════════════════════════════════
 const BREVO_API_KEY = process.env.BREVO_API_KEY;
-const FROM_EMAIL    = 'hello@brendablanche.com';
+const FROM_EMAIL    = 'unapologeticquenn@gmail.com';
 const FROM_NAME     = 'Brenda Blanche';
 const CLARITY_LINK  = 'https://calendly.com/unapologeticquenn/brand-clarity-call';
 const SUBSTACK_URL  = 'https://brendablanche.substack.com';
@@ -336,7 +336,7 @@ async function addContactToBrevo(name, email, archetype, mts) {
         ARCHETYPE:  archetype,
         MTS_SCORE:  mts
       },
-      listIds:     [2],
+      listIds:     [12],
       updateEnabled: true
     });
   } catch(e) {
